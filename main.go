@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/cheggaaa/pb/v3"
 	"github.com/hectorchu/gonano/util"
 	"github.com/hectorchu/gonano/wallet"
 )
@@ -27,6 +28,10 @@ func main() {
 		fatal(err)
 	}
 	defer f.Close()
+	fi, err := f.Stat()
+	if err != nil {
+		fatal(err)
+	}
 	buf := make([]byte, 32)
 	if _, err := rand.Read(buf); err != nil {
 		fatal(err)
@@ -55,9 +60,10 @@ func main() {
 	if err != nil {
 		fatal(err)
 	}
+	bar := pb.StartNew(int(fi.Size()))
 	for {
 		buf := make([]byte, 32)
-		_, err := f.Read(buf)
+		n, err := f.Read(buf)
 		if err == io.EOF {
 			break
 		}
@@ -72,6 +78,8 @@ func main() {
 		if err != nil {
 			fatal(err)
 		}
+		bar.Add(n)
 	}
+	bar.Finish()
 	fmt.Println("Stored", f.Name(), "to", a.Address())
 }
