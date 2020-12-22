@@ -93,14 +93,15 @@ func write(name, rpcURL string) (err error) {
 			return err
 		}
 		var zero big.Int
-		if balance.Cmp(&zero) > 0 || pending.Cmp(&zero) > 0 {
+		if balance.Cmp(&zero) > 0 {
 			break
 		}
+		if pending.Cmp(&zero) > 0 {
+			if err = a.ReceivePendings(); err != nil {
+				return err
+			}
+		}
 		time.Sleep(5 * time.Second)
-	}
-	err = a.ReceivePendings()
-	if err != nil {
-		return
 	}
 	bar := pb.StartNew(int(fi.Size()))
 	for {
