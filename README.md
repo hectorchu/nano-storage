@@ -7,7 +7,15 @@ It uses the `representative` field to store 32-byte chunks of a file per block.
 
 You will need a powerful GPU to generate blocks quickly if you want to store larger files.
 
-Usage:
+Install
+-------
+
+    go get -u github.com/hectorchu/nano-storage
+
+Requires go v1.15+.
+
+Usage
+-----
 
     -address string
             read file from NANO address
@@ -16,7 +24,8 @@ Usage:
     -rpc string
             RPC URL to use (default "https://mynano.ninja/api/node")
 
-Example:
+Example
+-------
 
     nano-storage -file <path to file to write>
     nano-storage -address <NANO address previously written by this tool>
